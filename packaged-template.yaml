@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Sam Template
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+  HelloFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: HelloFunction
+      CodeUri: s3://yinghan-bucket/4ce8e58683ce71b13f0547cd91c1cb01
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloAPI:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: MyApi
+            Path: /hello
+            Method: GET
+Outputs:
+  Region:
+    Description: Region
+    Value:
+      Ref: AWS::Region
+  ApiId:
+    Description: API ID
+    Value:
+      Ref: MyApi
+  ApiUrl:
+    Description: API endpoint URL for Prod environment
+    Value:
+      Fn::Sub: https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/dev/

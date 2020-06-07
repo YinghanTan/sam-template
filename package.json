@@ -1,0 +1,25 @@
+{
+  "name": "sam-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "stackName": "yinghan-sam-app",
+    "bucketName": "yinghan-bucket",
+    "awsProfile": "default",
+    "awsRegion": "ap-southeast-1",
+    "awsFunction": "HelloFunction"
+  },
+  "scripts": {
+    "validate": "sam validate --template template.yaml",
+    "mb": "aws s3 mb --profile %npm_package_config_awsProfile% s3://%npm_package_config_bucketName% --region %npm_package_config_awsRegion%",
+    "deploy": "sam package --profile %npm_package_config_awsProfile% --template-file template.yaml --output-template-file packaged-template.yaml --s3-bucket %npm_package_config_bucketName% && sam deploy --profile %npm_package_config_awsProfile% --template-file ./packaged-template.yaml --stack-name %npm_package_config_stackName% --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+    "deleteStack": "aws cloudformation --profile %npm_package_config_awsProfile% delete-stack --stack-name %npm_package_config_stackName% --region %npm_package_config_awsRegion%",
+    "rb": "aws s3 rm s3://%npm_package_config_bucketName% --recursive && aws s3 rb s3://%npm_package_config_bucketName% --region %npm_package_config_awsRegion%",
+    "logs": "sam logs --region %npm_package_config_awsRegion% -n %npm_package_config_awsFunction% --stack-name %npm_package_config_stackName%",
+    "describe": "aws cloudformation describe-stacks --region %npm_package_config_awsRegion% --stack-name %npm_package_config_stackName% --query 'Stacks[].Outputs'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
